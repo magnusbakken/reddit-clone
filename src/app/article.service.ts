@@ -27,14 +27,8 @@ export class ArticleService {
       .then(resp => resp.json())
       .then(json => json.articles)
       .then(articles => {
-        const list = articles.map(article => new Article(
-          article.title,
-          article.description,
-          article.urlToImage
-        ));
-
-        console.log('articles -> ', list);
-        return list;
+        console.log('articles -> ', articles);
+        return articles.map(a => Article.fromJSON(a));
       })
       .catch(err => {
         console.log('We got an error', err);
