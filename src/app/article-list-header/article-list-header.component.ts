@@ -36,8 +36,9 @@ export class ArticleListHeaderComponent implements OnInit {
     this.articleService.filterBy(value);
   }
 
-  private _updateSort() {
-    this.articleService.sortBy(this.currentFilter, this.sortDirection);
+  _updateSort() {
+    this.articleService
+      .sortBy(this.currentFilter, this.sortDirection);
   }
 
   ngOnInit() {

@@ -10,7 +10,7 @@ import { ArticleComponent } from './article/article.component';
 import { ArticleListComponent } from './article-list/article-list.component';
 import { ArticleService } from './article.service';
 import { ArticleListHeaderComponent } from './article-list-header/article-list-header.component';
-import { AboutComponent } from './about/about.component'
+import { AboutComponent } from './about/about.component';
 
 @NgModule({
   declarations: [

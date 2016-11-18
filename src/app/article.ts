@@ -30,10 +30,6 @@ export class Article {
     });
   }
 
-  public date(): Date {
-    return new Date();
-  }
-
   public voteUp(): void {
     this.votes += 1;
   }

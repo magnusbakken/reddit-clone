@@ -4,7 +4,8 @@ import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-sidebar',
-  templateUrl: './sidebar.component.html'
+  templateUrl: './sidebar.component.html',
+  styleUrls: ['./sidebar.component.css']
 })
 export class SidebarComponent implements OnInit {
   private sources: Observable<any>;
@@ -12,10 +13,11 @@ export class SidebarComponent implements OnInit {
   constructor(
     private articleService: ArticleService
   ) {
-    this.sources = articleService.sources;
+    this.sources = this.articleService.sources;
   }
 
   ngOnInit() {
     this.articleService.getSources();
   }
+
 }

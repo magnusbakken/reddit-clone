@@ -3,7 +3,8 @@ import { Article } from '../article';
 
 @Component({
   selector: 'app-article',
-  templateUrl: './article.component.html'
+  templateUrl: './article.component.html',
+  styleUrls: ['./article.component.css']
 })
 export class ArticleComponent {
   @Input() article: Article;

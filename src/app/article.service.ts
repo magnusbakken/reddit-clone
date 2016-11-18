@@ -12,7 +12,7 @@ import { environment } from '../environments/environment';
  * return value
  *  0 == they are equal in sort
  *  1 == a comes before b
- *  -1 == be comes before a
+ *  -1 == b comes before a
  */
 interface ArticleSortFn {
   (a: Article, b: Article): number;
@@ -97,7 +97,7 @@ export class ArticleService {
         const articles = articlesJSON
           .map(json => Article.fromJSON(json));
         this._articles.next(articles);
-      })
+      });
   }
 
   public getSources(): void {
