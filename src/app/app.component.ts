@@ -20,9 +20,30 @@ export class SidebarComponent {}
 @Component({
   selector: 'app-article',
   template: `
-    <div>
-      <h2>{{ article.title }}</h2>
-      <p>{{ article.description }}</p>
+    <div class="image">
+      <img src="https://placekitten.com/g/400/300">
+    </div>
+    <div class="content">
+      <div class="header">
+        {{ article.title }}
+      </div>
+      <div class="meta">
+        Voting and votes will go here
+      </div>
+      <div class="meta date">
+        Today
+      </div>
+      <div class="meta description">
+        <p>{{ article.description }}</p>
+      </div>
+      <div class="extra">
+        <a href="#"
+           target="_blank"
+           class="ui right floated button primary">
+           Read more
+           <i class="right chevron icon"></i>
+        </a>
+      </div>
     </div>
   `
 })
@@ -33,12 +54,13 @@ export class ArticleComponent {
 @Component({
   selector: 'app-root',
   template: `
-    <div id="container">
+    <div class="ui container">
       <app-sidebar></app-sidebar>
-      <div id="content">
+      <div class="ui divided items">
         <app-article
           *ngFor="let article of articles"
-          [article]="article"></app-article>
+          [article]="article"
+          class="item"></app-article>
       </div>
     </div>
   `
@@ -50,7 +72,7 @@ export class AppComponent {
     this.articles = [
       new Article(
         'The Angular 2 screencast',
-        'The easiest way to learn Angular 2 is with Fulstack.io!'
+        'The easiest way to learn Angular 2 is with Fullstack.io!'
       ),
       new Article(
         'Fullstack react',
