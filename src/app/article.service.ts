@@ -39,6 +39,8 @@ const sortFns = {
 export class ArticleService {
   private _articles: BehaviorSubject<Article[]> =
     new BehaviorSubject<Article[]>([]);
+  private _sources: BehaviorSubject<any> =
+    new BehaviorSubject<any>([]);
 
   private _sortByDirectionSubject: BehaviorSubject<number> =
     new BehaviorSubject<number>(1);
@@ -46,9 +48,11 @@ export class ArticleService {
     new BehaviorSubject<ArticleSortOrderFn>(sortByTime);
   private _filterBySubject: BehaviorSubject<string> =
     new BehaviorSubject<string>(""); 
+  private _refreshSubject: BehaviorSubject<string> =
+    new BehaviorSubject<string>("reddit-r-all"); 
   
+  public sources: Observable<any> = this._sources.asObservable();
   public articles: Observable<Article[]> = this._articles.asObservable();
-
   public orderedArticles : Observable<Article[]>;
 
   constructor(
@@ -68,6 +72,8 @@ export class ArticleService {
         .filter(a => re.exec(a.title))
         .sort(sorter(direction))
     });
+
+    this._refreshSubject.subscribe(this.getArticles.bind(this));
   }
 
   public sortBy(
@@ -84,8 +90,8 @@ export class ArticleService {
     this._filterBySubject.next(filter);
   }
 
-  public getArticles(): void {
-    this._makeHttpRequest('/v1/articles', 'ars-technica')
+  public getArticles(sourceKey = 'reddit-r-all'): void {
+    this._makeHttpRequest('/v1/articles', sourceKey)
       .map(json => json.articles)
       .subscribe(articlesJSON => {
         const articles = articlesJSON
@@ -94,13 +100,26 @@ export class ArticleService {
       })
   }
 
+  public getSources(): void {
+    this._makeHttpRequest('/v1/sources')
+      .map(json => json.sources)
+      .filter(list => list.length > 0)
+      .subscribe(this._sources);
+  }
+
+  public updateArticles(sourceKey: string): void {
+    this._refreshSubject.next(sourceKey);
+  }
+
   private _makeHttpRequest(
     path: string,
-    sourceKey: string
+    sourceKey?: string
   ) : Observable<any> {
     let params = new URLSearchParams();
     params.set('apiKey', environment.newsApiKey);
-    params.set('source', sourceKey);
+    if (sourceKey && sourceKey !== '') {
+      params.set('source', sourceKey);
+    }
 
     return this.http
       .get(`${environment.baseUrl}${path}`, {
