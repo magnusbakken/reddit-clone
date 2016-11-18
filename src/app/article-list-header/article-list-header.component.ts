@@ -31,6 +31,11 @@ export class ArticleListHeaderComponent implements OnInit {
     }
   }
 
+  liveSearch(evt) {
+    const value = evt.target.value;
+    this.articleService.filterBy(value);
+  }
+
   private _updateSort() {
     this.articleService.sortBy(this.currentFilter, this.sortDirection);
   }
