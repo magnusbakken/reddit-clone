@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Http, URLSearchParams } from '@angular/http';
+import { Observable, BehaviorSubject } from 'rxjs';
+import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/toPromise';
 
 import { Article } from './article';
@@ -7,29 +9,37 @@ import { environment } from '../environments/environment';
 
 @Injectable()
 export class ArticleService {
+  private _articles: BehaviorSubject<Article[]> =
+    new BehaviorSubject<Article[]>([]);
+  
+  public articles: Observable<Article[]> = this._articles.asObservable();
 
   constructor(
     private http: Http
   ) { }
 
-  public getArticles(): Promise<Article[]> {
+  public getArticles(): void {
+    this._makeHttpRequest('/v1/articles', 'reddit-r-all')
+      .map(json => json.articles)
+      .subscribe(articlesJSON => {
+        const articles = articlesJSON
+          .map(json => Article.fromJSON(json));
+        this._articles.next(articles);
+      })
+  }
+
+  private _makeHttpRequest(
+    path: string,
+    sourceKey: string
+  ) : Observable<any> {
     let params = new URLSearchParams();
     params.set('apiKey', environment.newsApiKey);
-    params.set('source', 'reddit-r-all');
+    params.set('source', sourceKey);
 
     return this.http
-      .get(`${environment.baseUrl}/v1/articles`, {
+      .get(`${environment.baseUrl}${path}`, {
         search: params
       })
-      .toPromise()
-      .then(resp => resp.json())
-      .then(json => json.articles)
-      .then(articles => {
-        console.log('articles -> ', articles);
-        return articles.map(a => Article.fromJSON(a));
-      })
-      .catch(err => {
-        console.log('We got an error', err);
-      });
+      .map(resp => resp.json());
   }
 }
