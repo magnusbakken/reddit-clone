@@ -3,11 +3,22 @@ import { Component, Input } from '@angular/core';
 class Article {
   constructor(
     public title: string,
-    public description: string
-  ) { }
+    public description: string,
+    public votes?: number
+  ) {
+    this.votes = votes || 0;
+  }
 
   public date(): Date {
     return new Date();
+  }
+
+  public voteUp(): void {
+    this.votes += 1;
+  }
+
+  public voteDown(): void {
+    this.votes -= 1;
   }
 } 
 
@@ -32,7 +43,26 @@ export class SidebarComponent {}
         {{ article.title }}
       </div>
       <div class="meta">
-        Voting and votes will go here
+        <span class="ui blue small label">
+          <i class="heart icon"></i>
+          <div class="detail">
+            {{ article.votes }}
+          </div>
+        </span>
+        <span class="ui right floated">
+          <a
+            (click)="upvote()"
+            class="ui small label">
+            <i class="arrow up icon"></i>
+            Upvote
+          </a>
+          <a
+            (click)="downvote()"
+            class="ui small label">
+            <i class="arrow down icon"></i>
+            Downvote
+          </a>
+        </span>
       </div>
       <div class="meta date">
         {{ article.date() | date:'medium' }}
@@ -53,6 +83,14 @@ export class SidebarComponent {}
 })
 export class ArticleComponent {
   @Input() article: Article;
+
+  upvote(): void {
+    this.article.voteUp();
+  }
+
+  downvote(): void {
+    this.article.voteDown();
+  }
 }
 
 @Component({
@@ -76,7 +114,8 @@ export class AppComponent {
     this.articles = [
       new Article(
         'The Angular 2 screencast',
-        'The easiest way to learn Angular 2 is with Fullstack.io!'
+        'The easiest way to learn Angular 2 is with Fullstack.io!',
+        10
       ),
       new Article(
         'Fullstack react',
