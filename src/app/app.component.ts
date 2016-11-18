@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'app-sidebar',
@@ -13,10 +13,15 @@ export class SidebarComponent {}
 @Component({
   selector: 'app-article',
   template: `
-    <div>Article goes here</div>
+    <div>
+      <h2>{{ article.title }}</h2>
+      <p>{{ article.description }}</p>
+    </div>
   `
 })
-export class ArticleComponent {}
+export class ArticleComponent {
+  @Input() article: Object;
+}
 
 @Component({
   selector: 'app-root',
@@ -24,11 +29,29 @@ export class ArticleComponent {}
     <div id="container">
       <app-sidebar></app-sidebar>
       <div id="content">
-        <app-article></app-article>
+        <app-article
+          *ngFor="let article of articles"
+          [article]="article"></app-article>
       </div>
     </div>
   `
 })
 export class AppComponent {
-  title = 'app works!';
+  articles: Object[];
+
+  constructor() {
+    this.articles = [{
+      title: 'The Angular 2 screencast',
+      description: 'The easiest way to learn Angular 2 is with Fulstack.io!'
+    }, {
+      title: 'Fullstack react',
+      description: 'Want to learn React too?',
+    }, {
+      title: 'Vue is new',
+      description: 'And pretty cool syntax too',
+    }, {
+      title: 'But what about elm?',
+      description: 'Everybody likes elm'
+    }]
+  }
 }
